@@ -1,6 +1,6 @@
 {
   "name": "glogger",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Simple logger module.",
   "homepage": "https://github.com/goliatone/glogger",
 	"repository": {
