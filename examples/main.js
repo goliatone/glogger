@@ -9,6 +9,9 @@ requirejs.config({
 
 define(['glogger', 'jquery'], function (GLogger, $) {
     console.log('Loading');
-	var glogger = new GLogger();
-	glogger.init();
+    var logger = new GLogger('Main');
+	var glogger = new GLogger('GLogger');
+    window.l = logger;
+	window.g = glogger;
+    window.GLogger = GLogger;
 });
