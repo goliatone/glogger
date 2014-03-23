@@ -99,15 +99,32 @@
 // METHODS
 ///////////////////////////////////////////////////
 
+    /**
+     * Adds an appender to the available appenders.
+     * @param {String} id       Appender id.
+     * @param {Object} appender
+     */
     GLogger.addAppender = function(id, appender){
         this.APPENDERS[id] = appender;
     };
 
+    /**
+     * Make logger active effectively making other
+     * loggers go mute.
+     * @param  {GLogger} logger GLogger
+     */
     GLogger.makeActive = function(logger){
         if(!logger) return delete this.activeLogger;
         this.activeLogger = 'logger' in logger ? logger.logger : logger;
     };
 
+    /**
+     * Factory method. Creates a new instance of GLogger.
+     * @param  {Object} owner   Object to which a logger
+     *                          intance will be attached
+     * @param  {Object} options Options object passed to
+     *                          GLogger instance
+     */
     GLogger.instance = function(owner, options){
         if(typeof owner === 'function') owner = owner.prototype;
         options || (options = {name:_getName(owner)});
