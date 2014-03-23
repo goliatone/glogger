@@ -36,6 +36,7 @@
 
     var _getName = function(owner){
         if(owner.name) return owner.name;
+        if(owner.__name__) return owner.__name__;
         if(owner.constructor){
             var match = owner.constructor.toString().match(/function ([^\(]+)/);
             if(match) return match[1];
@@ -56,6 +57,21 @@
         if(!object.hasOwnProperty(key)) return;
         if(typeof object[key] === 'function') object[key].call(object, key);
         object[key] = value;
+    };
+
+    var _getDate = function getDate() {
+        var date = new Date();
+
+        var hour = date.getHours();
+        hour = (hour < 10 ? '0' : '') + hour;
+
+        var min  = date.getMinutes();
+        min = (min < 10 ? '0' : '') + min;
+
+        var sec = date.getSeconds();
+        sec = (sec < 10 ? '0' : '') + sec;
+
+        return hour + ':' + min + ':' + sec;
     };
 
 ///////////////////////////////////////////////////
@@ -88,7 +104,8 @@
     };
 
     GLogger.makeActive = function(logger){
-        this.activeLogger = logger;
+        if(!logger) return delete this.activeLogger;
+        this.activeLogger = 'logger' in logger ? logger.logger : logger;
     };
 
     GLogger.instance = function(owner, options){
@@ -105,10 +122,14 @@
 
     GLogger.FORCE = ['error'];
 
+    //TODO: This might not be the best idea...
     GLogger.INSTANCES = {};
 
     GLogger.DEFAULT_FILTERS = [
-        function(level){return !this._enabled && GLogger.FORCE.indexOf(level) === -1;}
+        //Filters out disabled loggers, except when the level is found in FORCE
+        function(level){return !this._enabled && GLogger.FORCE.indexOf(level) === -1;},
+        //If we have an active logger, and it's not this logger, filter out.
+        function(level){return GLogger.activeLogger && GLogger.activeLogger !== this;}
     ];
 
     GLogger.APPENDERS = {'console':console};
@@ -136,7 +157,7 @@
     };
 
     GLogger.prototype.getHeader = function(level, append){
-        return ['[',level.toUpperCase(),'] ', this.name,':',' ', append || ''].join('');
+        return [_getDate(),' ','[',level.toUpperCase(),']\t', this.name,':',' ', append || ''].join('');
     };
 
     GLogger.prototype.addFilter = function(filter){
