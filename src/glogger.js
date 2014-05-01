@@ -32,7 +32,7 @@
             return mod;
         };
     }
-}(this, 'GLogger', ['jquery'], function($) {
+}(this, 'glogger', ['jquery'], function($) {
 
     var _getName = function(owner){
         if(owner.name) return owner.name;
