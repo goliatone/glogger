@@ -214,6 +214,7 @@
                 var appender;
                 Object.keys(GLogger.APPENDERS).forEach(function(id){
                     appender = GLogger.APPENDERS[id];
+                    if(typeof appender[method] !== 'function') return;
                     appender[method].apply(appender, args);
                 });
             };
